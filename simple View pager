@@ -1,0 +1,45 @@
+// Step Simple View Pager
+<ViewPager
+id="viewPager/>
+
+
+//Step 2 Create Adapter Class
+class SlidepageAdapter(fm:FragmentManager) :FragmentPagerAdapter(fm)
+{
+  fun getCount():Int
+  {
+    return number of fragment
+    
+  }
+  
+  fun getItem(Position :Int):Fragment{
+  
+  when(position){
+
+        0 ->{return FirstFragment()}
+        1 ->{return SecondFragment()}
+        2 ->{return ThirdFragment()}
+        else -> return null!!
+    }
+}
+}
+
+step4 MainACtivity 
+
+class MainActivity : AppCompatActivity() {
+
+
+
+
+    private lateinit var viewPager: ViewPager
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val viewpager=findViewById<ViewPager>(R.id.view_pager)
+        val adapter=SliderAdapter(supportFragmentManager)
+        viewpager!!.adapter=adapter
+
+
+
+    }
+}
