@@ -1,0 +1,83 @@
+//When we want to pass data between fragments, we are doing it with the help of the Activity which contains these fragments.
+
+//In our example, the Activity is the MainActivity.kt.
+
+//So we are going to use the MainActivity to pass the data from the first to the second fragment using an interface.
+
+//In our example we call it Communicator:
+// create new interface like this
+ 
+interface Communicator {
+
+    fun passDataCom(editext_input: String)
+
+}
+
+
+
+//Inside the interface there’s a method passDataCom where we pass the input text from the EditText from our first fragment.
+//Fragmentfirst
+
+class Fragment1: Fragment() {
+
+    lateinit var comm: Communicator
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_1, container, false)
+        comm = activity as Communicator
+
+        rootView.enter_btn.setOnClickListener {
+            comm.passDataCom(rootView.input_edittext.text.toString())
+        }
+        return rootView
+    }
+}
+
+//mainactivity
+
+class MainActivity : AppCompatActivity(), Communicator {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // Replace Main Activity content with the Fragment1 content
+        val fragment1 = Fragment1()
+        supportFragmentManager.beginTransaction().replace(R.id.content_id, fragment1).commit()
+
+    }
+    
+    
+
+    override fun passDataCom(editext_input: String) {
+        val bundle = Bundle()
+        bundle.putString("input_txt",editext_input)
+
+        val transaction = this.supportFragmentManager.beginTransaction()
+        val frag2 = Fragment2()
+        frag2.arguments = bundle
+
+        transaction.replace(R.id.content_id, frag2)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
+    }
+}
+
+//fragment second
+class Fragment2: Fragment() {
+
+    var inputText: String? = ""
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_2, container, false)
+        inputText = arguments?.getString("input_txt")
+
+        rootView.output_textview.text = inputText
+
+        return rootView
+    }
+
+}
+
+
